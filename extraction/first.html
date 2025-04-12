@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KYC Upload</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: #f0f2f5;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 40px;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      width: 450px;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+    .upload-section {
+      margin-bottom: 30px;
+    }
+    .placeholder {
+  width: 60%;
+  height: 300px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background: url('aadhar.jpg') center center no-repeat;
+  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+}
+    .file-input {
+      width: 100%;
+    }
+    .file-input input {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+    }
+    .dropdown-select {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+    .details-form {
+      margin-top: 15px;
+      display: none;
+    }
+    .details-form input, .details-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background-color: #0056b3;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>KYC Verification</h2>
+
+    <!-- Aadhar Upload -->
+    <div class="upload-section">
+      <label for="aadharUpload">Upload Aadhar Card:</label>
+      <div class="placeholder" id="aadharPlaceholder"></div>
+      <div class="file-input">
+        <input type="file" id="aadharUpload" accept="image/*">
+      </div>
+      <div class="details-form" id="aadharDetails">
+        <label>Name:</label><input type="text">
+        <label>DOB:</label><input type="date">
+        <label>Gender:</label><input type="text">
+        <label>Phone:</label><input type="tel">
+        <label>Email:</label><input type="email">
+        <label>Address:</label><textarea></textarea>
+        <label>Aadhar Number:</label><input type="text">
+      </div>
+    </div>
+
+    <!-- Second Document Selection -->
+    <div class="upload-section">
+      <label for="docType">Select Second Document:</label>
+      <select id="docType" class="dropdown-select">
+        <option value="">-- Select --</option>
+        <option value="PAN">PAN Card</option>
+        <option value="Passport">Passport</option>
+        <option value="Driving License">Driving License</option>
+      </select>
+
+      <div class="file-input" id="secondDocUploadContainer" style="display:none;">
+        <input type="file" id="secondDocUpload" accept="image/*">
+      </div>
+
+      <div class="details-form" id="secondDocDetails">
+        <label>Name:</label><input type="text">
+        <label>DOB:</label><input type="date">
+        <label>Gender:</label><input type="text">
+        <label>Phone:</label><input type="tel">
+        <label>Email:</label><input type="email">
+        <label>Address:</label><textarea></textarea>
+        <label id="secondIdLabel">ID Number:</label><input type="text">
+      </div>
+    </div>
+
+    <button class="submit-btn">Submit Documents</button>
+  </div>
+
+  <script>
+    const aadharUpload = document.getElementById("aadharUpload");
+    const aadharDetails = document.getElementById("aadharDetails");
+    const aadharPlaceholder = document.getElementById("aadharPlaceholder");
+
+    const docType = document.getElementById("docType");
+    const secondDocUploadContainer = document.getElementById("secondDocUploadContainer");
+    const secondDocUpload = document.getElementById("secondDocUpload");
+    const secondDocDetails = document.getElementById("secondDocDetails");
+    const secondIdLabel = document.getElementById("secondIdLabel");
+
+    aadharUpload.addEventListener("change", () => {
+      if (aadharUpload.files.length > 0) {
+        const fileURL = URL.createObjectURL(aadharUpload.files[0]);
+        aadharPlaceholder.style.background = url(${fileURL}) center center no-repeat;
+        aadharPlaceholder.style.backgroundSize = "cover";
+        aadharDetails.style.display = "block";
+      }
+    });
+
+    docType.addEventListener("change", () => {
+      if (docType.value) {
+        secondDocUploadContainer.style.display = "block";
+        secondDocDetails.style.display = "none";
+        secondIdLabel.innerText = ${docType.value} Number:;
+      } else {
+        secondDocUploadContainer.style.display = "none";
+        secondDocDetails.style.display = "none";
+      }
+    });
+
+    secondDocUpload.addEventListener("change", () => {
+      if (secondDocUpload.files.length > 0) {
+        secondDocDetails.style.display = "block";
+      }
+    });
+  </script>
+
+</body>
+</html>
