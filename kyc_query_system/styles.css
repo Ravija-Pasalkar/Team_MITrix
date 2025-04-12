@@ -1,0 +1,145 @@
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --bg-color: #f5f7fa;
+  --white: #ffffff;
+  --gray-light: #ecf0f1;
+  --gray: #bdc3c7;
+  --text-color: #333;
+  --error-color: #e74c3c;
+  --success-color: #2ecc71;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  padding: 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+header {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 20px;
+  text-align: center;
+}
+
+main {
+  padding: 20px;
+}
+
+.query-section {
+  margin-bottom: 30px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn-submit {
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+  background-color: #2980b9;
+}
+
+.results-section {
+  background-color: var(--gray-light);
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.sql-display {
+  margin-bottom: 20px;
+}
+
+pre {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap;
+  margin-top: 10px;
+}
+
+.results-container {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background-color: var(--white);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--gray);
+}
+
+th {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+tr:nth-child(even) {
+  background-color: var(--gray-light);
+}
+
+.error {
+  color: var(--error-color);
+  padding: 10px 0;
+  font-weight: bold;
+}
+
+.loading {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: var(--secondary-color);
+}
+
+.placeholder-text {
+  color: var(--gray);
+  font-style: italic;
+  padding: 20px 0;
+  text-align: center;
+}
