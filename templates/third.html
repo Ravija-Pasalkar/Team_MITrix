@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voice + Face Liveness Check</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+    }
+    video {
+      max-width: 100%;
+      border: 2px solid #ccc;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    #recording-status {
+      margin-top: 10px;
+      font-style: italic;
+      color: gray;
+    }
+    .success { color: green; }
+    .failure { color: red; }
+    #statusMessage {
+      margin-top: 15px;
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛡️ Voice + Face Liveness Verification</h1>
+  <p>Please read the following sentence aloud:</p>
+  <p><strong id="challenge-text">Loading challenge...</strong></p>
+
+  <video id="video" width="640" height="480" autoplay muted></video>
+  <div id="recording-status"></div>
+
+  <button id="start-record">Start Recording</button>
+  <button id="stop-record" disabled>Stop Recording</button>
+
+  <div id="statusMessage"></div>
+
+  <script>
+    const videoElement = document.getElementById('video');
+    const challengeTextElement = document.getElementById('challenge-text');
+    const startRecordButton = document.getElementById('start-record');
+    const stopRecordButton = document.getElementById('stop-record');
+    const statusMessage = document.getElementById('statusMessage');
+    const recordingStatus = document.getElementById('recording-status');
+
+    let mediaRecorder;
+    let recordedBlobs = [];
+    let stream;
+
+    async function fetchChallenge() {
+      try {
+        const res = await fetch('/get-challenge?language=English');
+        const data = await res.json();
+        challengeTextElement.textContent = data.challenge || "Failed to load challenge.";
+      } catch (error) {
+        console.error("Error fetching challenge:", error);
+        statusMessage.textContent = "Could not load challenge.";
+      }
+    }
+
+    async function startCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        videoElement.srcObject = stream;
+      } catch (error) {
+        statusMessage.textContent = "Camera/microphone access denied.";
+      }
+    }
+
+    fetchChallenge();
+    startCamera();
+
+    startRecordButton.addEventListener('click', () => {
+      if (!stream) {
+        statusMessage.textContent = "No camera stream available.";
+        return;
+      }
+
+      recordedBlobs = [];
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) recordedBlobs.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(recordedBlobs, { type: 'video/webm' });
+        const formData = new FormData();
+        formData.append('video', new File([blob], 'video.webm', { type: 'video/webm' }));
+
+        statusMessage.textContent = "⏳ Verifying identity...";
+
+        try {
+          const res = await fetch('/verify', {
+            method: 'POST',
+            body: formData
+          });
+
+          const data = await res.json();
+
+          if (data.success && data.redirect) {
+            statusMessage.textContent = "✅ Verification successful! Redirecting...";
+            statusMessage.style.color = "green";
+            setTimeout(() => {
+              window.location.href = data.redirect;
+            }, 1000);
+          } else {
+            statusMessage.textContent = data.error || "Verification failed.";
+            statusMessage.style.color = "red";
+          }
+        } catch (err) {
+          console.error("Verification error:", err);
+          statusMessage.textContent = "❌ Server error during verification.";
+          statusMessage.style.color = "red";
+        }
+      };
+
+      mediaRecorder.start();
+      recordingStatus.textContent = "🎙️ Recording... Speak now.";
+      startRecordButton.disabled = true;
+      stopRecordButton.disabled = false;
+      statusMessage.textContent = "";
+    });
+
+    stopRecordButton.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        stream.getTracks().forEach(track => track.stop());
+        stopRecordButton.disabled = true;
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consent Page</title>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --secondary-color: #64748b;
+      --dark-bg: #111827;
+      --darker-bg: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --muted-text: #94a3b8;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+      line-height: 1.6;
+      font-size: 16px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem;
+      background-color: var(--darker-bg);
+      border-radius: 16px;
+      box-shadow: var(--box-shadow);
+    }
+
+    h2 {
+      margin-bottom: 2rem;
+      font-weight: 700;
+      color: var(--text-color);
+      font-size: 1.75rem;
+      letter-spacing: -0.025em;
+      position: relative;
+      padding-bottom: 0.75rem;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 50px;
+      background-color: var(--primary-color);
+      border-radius: 3px;
+    }
+
+    .consent-section {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .consent-section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+      color: var(--text-color);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      margin-right: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: var(--darker-bg);
+    }
+
+    .checkbox-label input[type="checkbox"]:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .checkbox-label input[type="checkbox"]:checked::before {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .read-points {
+      display: inline-block;
+      color: var(--primary-color);
+      margin-left: 34px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 0.25rem 0;
+    }
+
+    .read-points:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    .points-box {
+      display: none;
+      margin: 1rem 0 0 34px;
+      padding: 1.25rem;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border-left: 3px solid var(--primary-color);
+      font-size: 0.95rem;
+    }
+
+    .points-box ul {
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .points-box li {
+      margin-bottom: 0.5rem;
+    }
+
+    .points-box .links {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--muted-text);
+      font-size: 0.875rem;
+    }
+
+    .points-box a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    .points-box a:hover {
+      text-decoration: underline;
+      color: var(--primary-hover);
+    }
+
+    .submit-btn {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.875rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: block;
+      width: 100%;
+      margin-top: 2rem;
+      letter-spacing: 0.025em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    .submit-btn::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: -100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .submit-btn:hover::after {
+      left: 100%;
+    }
+
+    .success-animation {
+      text-align: center;
+      display: none;
+    }
+
+    .checkmark {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      stroke: var(--success-color);
+      stroke-width: 2;
+      stroke-miterlimit: 10;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+
+    .checkmark__circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      fill: none;
+      animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .checkmark__check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    h3 {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out 1.2s forwards;
+    }
+
+    @keyframes stroke {
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes scale {
+      0%, 100% {
+        transform: none;
+      }
+      50% {
+        transform: scale3d(1.1, 1.1, 1);
+      }
+    }
+
+    @keyframes fill {
+      100% {
+        box-shadow: 0 0 0 30px rgba(16, 185, 129, 0);
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .consent-section {
+        padding: 1.25rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .checkbox-label {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Consent Agreements</h2>
+
+    <div class="consent-section">
+      <label class="checkbox-label">
+        <input type="checkbox" id="dpdpConsent"> I agree to the DPDP Act
+      </label>
+      <div class="read-points" onclick="togglePoints('dpdpPoints')">📄 Read key points</div>
+      <div class="points-box" id="dpdpPoints">
+        <ul>
+          <li>Personal data must be processed with user consent.</li>
+          <li>Data Principals have the right to access, correct, and erase their data.</li>
+          <li>Strict rules for data fiduciaries on data storage and processing.</li>
+        </ul>
+        <div class="links">
+          Please read the full DPDP Act for detailed information:
+          <a href="https://www.meity.gov.in/data-protection-framework" target="_blank">DPDP Act Official Link</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="consent-section">
+      <label class="checkbox-label">
+        <input type="checkbox" id="gdprConsent"> I agree to the GDPR Act
+      </label>
+      <div class="read-points" onclick="togglePoints('gdprPoints')">📄 Read key points</div>
+      <div class="points-box" id="gdprPoints">
+        <ul>
+          <li>Users have the right to know how their data is used.</li>
+          <li>Right to be forgotten and data portability are ensured.</li>
+          <li>Organizations must report data breaches within 72 hours.</li>
+        </ul>
+        <div class="links">
+          Please read the full GDPR regulations for detailed information:
+          <a href="https://gdpr.eu/" target="_blank">GDPR Official Link</a>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="finalSubmitBtn">Continue</button>
+
+    <div class="success-animation" id="success-animation">
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+      <h3>Verification Successful</h3>
+    </div>
+  </div>
+
+  <script>
+    function togglePoints(id) {
+      const box = document.getElementById(id);
+      box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const finalSubmitBtn = document.getElementById('finalSubmitBtn');
+      const consentSections = document.querySelectorAll('.consent-section');
+      const successAnimation = document.getElementById('success-animation');
+      const container = document.querySelector('.container');
+      const consentHeading = document.querySelector('h2');
+      const continueButton = document.querySelector('.submit-btn');
+
+      finalSubmitBtn.addEventListener('click', function () {
+        // You can add logic here to check if both checkboxes are checked
+        // For now, we'll just simulate a successful submission
+
+        consentSections.forEach(section => {
+          section.style.display = 'none';
+        });
+
+        if (consentHeading) consentHeading.style.display = 'none';
+        if (continueButton) continueButton.style.display = 'none';
+
+        successAnimation.style.display = 'block';
+        container.style.paddingTop = '4rem';
+        container.style.paddingBottom = '4rem';
+      });
+    });
+  </script>
+</body>
+</html>

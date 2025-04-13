@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credentia - Secure Identity Verification</title>
+    <style>
+        :root {
+            --primary-color: #5e72e4;
+            --secondary-color: #8392ab;
+            --dark-bg: #1a1e2e;
+            --darker-bg: #141824;
+            --card-bg: #252b3b;
+            --text-color: #e9ecef;
+            --muted-text: #8892a0;
+            --success-color: #2dce89;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .tagline {
+            color: var(--muted-text);
+            font-size: 14px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .card h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--secondary-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(94, 114, 228, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .upload-area.active {
+            border-color: var(--success-color);
+            background-color: rgba(45, 206, 137, 0.05);
+        }
+        
+        .upload-text h3 {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .upload-text p {
+            color: var(--muted-text);
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+        
+        #upload-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background-color: #4c60ce;
+            transform: translateY(-2px);
+        }
+        
+        .form-section {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(94, 114, 228, 0.3);
+        }
+        
+        .form-group.full-width {
+            flex: 1 1 100%;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: rgba(94, 114, 228, 0.1);
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .file-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            color: var(--primary-color);
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-right: auto;
+        }
+        
+        .file-size {
+            color: var(--muted-text);
+            font-size: 14px;
+        }
+        
+        .submit-btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto 0;
+        }
+        
+        .submit-btn:hover {
+            background-color: #26b979;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 206, 137, 0.3);
+        }
+        
+        .error-message {
+            color: #f5365c;
+            margin-top: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .success-animation {
+            margin: 2rem auto;
+            text-align: center;
+            display: none;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: var(--success-color);
+            stroke-miterlimit: 10;
+            margin: 0 auto 1rem;
+            box-shadow: 0 0 0 rgba(45, 206, 137, 0.4);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: var(--success-color);
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        
+        @keyframes fill {
+            100% {
+                box-shadow: 0 0 0 30px rgba(45, 206, 137, 0);
+            }
+        }
+        /* #nextBtn {
+  display: none;
+  margin-top: 20px;
+  padding: 10px 25px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#nextBtn:hover {
+  background-color: #0056b3;
+} */
+
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--muted-text);
+            font-size: 14px;
+        }
+        
+        .security-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            margin: 0 1rem;
+            font-size: 12px;
+        }
+        
+        .security-badge i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">
+                    <h1>Credentia</h1>
+                    <p class="tagline">Secure Identity Verification You Can Trust</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="card">
+            <h2>Aadhaar Verification</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">
+                    <h3>Upload Aadhaar Card</h3>
+                    <p>Please upload a clear image or PDF of your Aadhaar card</p>
+                    <button class="upload-btn" id="upload-trigger">Select Document</button>
+                </div>
+                <input type="file" id="upload-input" accept=".jpg,.jpeg,.png,.pdf">
+            </div>
+            
+            <div class="file-info" id="file-info">
+                <div class="file-icon">📄</div>
+                <div class="file-name" id="file-name"></div>
+                <div class="file-size" id="file-size"></div>
+            </div>
+            
+            <div class="form-section" id="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="As per Aadhaar card">
+                        <div class="error-message" id="name-error">Name is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob">
+                        <div class="error-message" id="dob-error">Date of Birth is required</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="error-message" id="gender-error">Gender is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+91 XXXXX XXXXX">
+                        <div class="error-message" id="phone-error">Valid phone number is required</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="your@email.com">
+                        <div class="error-message" id="email-error">Valid email is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhaar">Aadhaar Number</label>
+                        <input type="text" id="aadhaar" placeholder="XXXX XXXX XXXX">
+                        <div class="error-message" id="aadhaar-error">Valid 12-digit Aadhaar number is required</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="address">Full Address</label>
+                        <input type="text" id="address" placeholder="As per Aadhaar card">
+                        <div class="error-message" id="address-error">Address is required</div>
+                    </div>
+                </div>
+                
+                <button class="submit-btn" id="submit-btn">Verify & Submit</button>
+            </div>
+            
+            <div class="success-animation" id="success-animation">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+                <h3>Verification Successful</h3>
+                <p>Your identity has been verified successfully. You will receive a confirmation shortly.</p>
+                <button class="upload-btn" id="upload-trigger" onclick="goToNextPage()">Next</button>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="security-info">
+                <div class="security-badge">
+                    <i>🔒</i> 256-bit Encryption
+                </div>
+                <div class="security-badge">
+                    <i>✓</i> UIDAI Compliant
+                </div>
+                <div class="security-badge">
+                    <i>🛡️</i> ISO 27001 Certified
+                </div>
+            </div>
+            <p>© 2025 Credentia. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('upload-area');
+            const uploadInput = document.getElementById('upload-input');
+            const uploadTrigger = document.getElementById('upload-trigger');
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const formSection = document.getElementById('form-section');
+            const submitBtn = document.getElementById('submit-btn');
+            const successAnimation = document.getElementById('success-animation');
+            
+            let isFileUploaded = false;
+            
+            // Handle file upload click
+            uploadTrigger.addEventListener('click', function() {
+                uploadInput.click();
+            });
+            
+            // Handle drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('active');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // Handle file selection
+            uploadInput.addEventListener('change', function() {
+                if (uploadInput.files.length) {
+                    handleFile(uploadInput.files[0]);
+                }
+            });
+            
+            function handleFile(file) {
+                isFileUploaded = true;
+                uploadArea.classList.add('active');
+                
+                // Display file info
+                fileInfo.style.display = 'flex';
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                
+                // Show the form after a brief delay to simulate processing
+                setTimeout(() => {
+                    formSection.style.display = 'block';
+                    
+                    // Auto-fill some sample data (in a real app, this would come from OCR/document parsing)
+                    document.getElementById('name').value = "Anik Kumar";
+                    document.getElementById('dob').value = "2003-02-03";
+                    document.getElementById('gender').value = "male";
+                    document.getElementById('aadhaar').value = "2923 8661 2346";
+                    document.getElementById('address').value = "123, Main Street, Bangalore, Karnataka - 560001";
+                }, 1500);
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            
+            // Form validation and submission
+            submitBtn.addEventListener('click', function() {
+                if (validateForm()) {
+                    // Show loading state
+                    submitBtn.textContent = "Processing...";
+                    submitBtn.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        formSection.style.display = 'none';
+                        successAnimation.style.display = 'block';
+                    }, 2000);
+                }
+            });
+            
+            function validateForm() {
+                let isValid = true;
+                const name = document.getElementById('name');
+                const dob = document.getElementById('dob');
+                const gender = document.getElementById('gender');
+                const phone = document.getElementById('phone');
+                const email = document.getElementById('email');
+                const aadhaar = document.getElementById('aadhaar');
+                const address = document.getElementById('address');
+                
+                // Reset errors
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Validate each field
+                if (!name.value.trim()) {
+                    document.getElementById('name-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!dob.value) {
+                    document.getElementById('dob-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!gender.value) {
+                    document.getElementById('gender-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!phone.value.trim() || !validatePhone(phone.value)) {
+                    document.getElementById('phone-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!email.value.trim() || !validateEmail(email.value)) {
+                    document.getElementById('email-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!aadhaar.value.trim() || !validateAadhaar(aadhaar.value)) {
+                    document.getElementById('aadhaar-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!address.value.trim()) {
+                    document.getElementById('address-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validateEmail(email) {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+            
+            function validatePhone(phone) {
+                // Basic validation for Indian phone numbers
+                const re = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+                return re.test(String(phone));
+            }
+            
+            function validateAadhaar(aadhaar) {
+                // Remove spaces and check if it's 12 digits
+                const cleaned = aadhaar.replace(/\s/g, '');
+                return /^\d{12}$/.test(cleaned);
+            }
+            
+
+        });
+        function goToNextPage() {
+              window.location.href = "second.html"; // change this to your next page
+              }
+
+
+    </script>
+</body>
+</html>
